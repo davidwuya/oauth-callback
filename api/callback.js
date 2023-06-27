@@ -1,25 +1,13 @@
-// api/callback.js
-import fetch from 'node-fetch';
+import { kv } from "@vercel/kv";
 
 export default async function handler(req, res) {
   const { code, state } = req.query;
-  const kvUrl = process.env.KV_URL;
 
-  // Save the auth code to Vercel KV
-  const response = await fetch(`${kvUrl}/auth_code_${state}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${process.env.KV_REST_API_TOKEN}`,
-    },
-    body: JSON.stringify({ value: code }),
-  });
+  // Store the code and state to Vercel KV with 1-minute expiry.
+  await kv.set("authorization_data", { code, state }, { expires: new Date(Date.now() + 60000) });
 
-  if (!response.ok) {
-    res.status(500).json({ error: 'Failed to save auth code' });
-    return;
-  }
+  // You could extend this to perform the OAuth2 token exchange here,
+  // or do it elsewhere depending on your application design.
 
-  // Optionally, you can redirect the user to a success page
-  res.redirect('/success');
+  res.status(200).send('Authorization data stored successfully');
 }
