@@ -25,7 +25,8 @@ export default async function handler(req, res) {
     });
 
     if (!tokenResponse.ok) {
-      throw new Error('Token exchange failed');
+      const errorText = await tokenResponse.text();
+      throw new Error(`Token exchange failed with status ${tokenResponse.status}: ${errorText}`);
     }
 
     const tokenData = await tokenResponse.json();
