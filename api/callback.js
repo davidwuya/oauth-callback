@@ -5,17 +5,17 @@ export default async function handler(req, res) {
   // Get the authorization code and state from the query parameters.
   const { code, state } = req.query;
 
-  if (state !== process.env.STATE) {
+  if (state !== process.env.OAUTH_STATE) {
     return res.status(401).send('Unauthorized');
   }
-
+  let redirect_uri = "https://".concat(process.env.VERCEL_URL, "/api/callback");
   // Perform the OAuth2 token exchange.
   try {
     const tokenResponse = await axios.post('https://api.digikey.com/v1/oauth2/token', {
       code,
       client_id: process.env.CLIENT_ID,
       client_secret: process.env.CLIENT_SECRET,
-      redirect_uri: process.env.REDIRECT_URI,
+      redirect_uri: redirect_uri,
       grant_type: 'authorization_code'
     }, {
       headers: {

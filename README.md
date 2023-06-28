@@ -2,6 +2,11 @@
 This project sets up a OAuth2 Callback endpoint hosted on Vercel to facilitate the OAuth2 token exchange flow, specifically tailored to the Digi-Key API. It securely manages and refreshes access tokens using Vercel's Key Value (KV) storage system.
 
 ## Usage
+### Setting Environment Variables
+* `OAUTH_STATE`: A randomly generated string, used to verify the integrity of the callback.
+* `CLIENT_ID`: OAuth Client ID.
+* `CLIENT_SECRET`: OAuth Client Secret.
+* `API_KEY`: A randomly generated string used to validate client's identity when retriving the token.
 ### OAuth2 Callback
 The initial authentication needs to be initiated from the client side. Something like this will suffice.
 ```python
