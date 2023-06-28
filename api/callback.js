@@ -5,7 +5,7 @@ export default async function handler(req, res) {
   if (state !== process.env.OAUTH_STATE) {
     return res.status(401).send('Unauthorized');
   }
-  let redirect_uri = "https://oauth-callback.vercel.app/api/callback/";
+  let redirect_uri = "https://oauth-callback.vercel.app/api/callback";
 
   // Perform the OAuth2 token exchange.
   try {
