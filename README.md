@@ -26,10 +26,12 @@ webbrowser.open(url)
 The callback endpoint will get the authorization code from the URL and get the first access and refresh tokens. It will then store them in Vercel KV and return a `200`. 
 ### Obtaining Token
 Then you need to get the token by calling the `token` endpoint with an API key that you set in Vercel Environmemt Variable as `API_KEY`.  The endpoint will return the current access token. If the access token has expired, it will automatically refresh the token. If the refresh token has expired, it will return an `401` instructing you to start a new OAuth2 flow.
+### Verifying Token
+The `verify` endpoint will check the tokens and return a status message indicating the condition of the tokens. You can query this endpoint to know whether you need to refresh the access token or start a new OAuth2 flow.
+* `404`: Refresh token expired or does not exist.
+* `202`: Access token expired but refresh token is valid.
+* `200`: Both tokens are valid.
 
 ## Notes
 * The expiry times for the tokens are also stored in Vercel KV. The access token is valid for 30 minutes and the refresh token is valid for 90 days.
 * This project does not automatically handle token refreshes without an incoming request. If you retrieve the token after both the access token and refresh token have expired, you will have to initiate a new OAuth2 flow.
-
-## Todos
-* Use environment variables for everything and make it more universal
